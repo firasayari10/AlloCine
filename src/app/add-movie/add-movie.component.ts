@@ -2,6 +2,7 @@ import { Component , inject} from '@angular/core';
 import { Movie } from '../models/movie';
 import { FormsModule } from '@angular/forms';
 import { MoviesApiService } from '../services/movies-api';
+import { TranslationService } from '../services/translation.service';
 import { Router, RouterModule } from '@angular/router';
 import { toast } from 'ngx-sonner';
 
@@ -12,6 +13,14 @@ import { toast } from 'ngx-sonner';
   styleUrl: './add-movie.scss',
 })
 export class AddMovieComponent {
+  readonly translationService = inject(TranslationService);
+  private readonly moviesApi = inject(MoviesApiService);
+  private readonly router = inject(Router);
+
+  get t() {
+    return this.translationService.t;
+  }
+
   movie: Movie = {
     title: '',
     director: '',
@@ -21,8 +30,6 @@ export class AddMovieComponent {
     rate: undefined, 
     image: undefined
   }
-  private readonly moviesApi = inject(MoviesApiService);
-  private readonly router = inject(Router);
 
   addMovie(): void {
     const releaseDate = this.movie.releaseDate instanceof Date 

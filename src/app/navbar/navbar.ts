@@ -2,6 +2,8 @@ import { Component, Input, Output, EventEmitter, inject } from '@angular/core';
 import { CommonModule, TitleCasePipe } from '@angular/common';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { AuthService } from '../services/auth.service';
+import { TranslationService } from '../services/translation.service';
+import { ThemeService } from '../services/theme.service';
 import { toast } from 'ngx-sonner';
 
 @Component({
@@ -16,9 +18,23 @@ export class Navbar {
   @Output() menuToggle = new EventEmitter<void>();
   
   readonly authService = inject(AuthService);
+  readonly translationService = inject(TranslationService);
+  readonly themeService = inject(ThemeService);
+
+  get t() {
+    return this.translationService.t;
+  }
 
   toggleMenu() {
     this.menuToggle.emit();
+  }
+
+  toggleLanguage() {
+    this.translationService.toggleLanguage();
+  }
+
+  toggleTheme() {
+    this.themeService.toggleTheme();
   }
 
   logout() {

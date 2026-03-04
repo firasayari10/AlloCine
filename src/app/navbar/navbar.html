@@ -14,22 +14,35 @@
 
     <div class="nav-links">
       <a class="nav-link" routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">
-        Home
+        {{ t.home }}
       </a>
       <a class="nav-link" routerLink="/movies" routerLinkActive="active">
-        Movies
+        {{ t.movies }}
       </a>
+      @if (authService.isAuthenticated()) {
+        <a class="nav-link" routerLink="/my-reviews" routerLinkActive="active">
+          {{ t.myReviews }}
+        </a>
+      }
     </div>
 
     <div class="auth-section">
+      <button class="theme-toggle" (click)="toggleTheme()" [title]="themeService.isDarkMode() ? 'Light mode' : 'Dark mode'">
+        {{ themeService.isDarkMode() ? '🌙' : '☀️' }}
+      </button>
+      
+      <button class="lang-toggle" (click)="toggleLanguage()" [title]="translationService.isEnglish() ? 'Switch to French' : 'Passer en Anglais'">
+        {{ translationService.isEnglish() ? 'EN' : 'FR' }}
+      </button>
+      
       @if (authService.isAuthenticated()) {
-        <a class="user-avatar" routerLink="/profile" title="My Profile">
+        <a class="user-avatar" routerLink="/profile" [title]="t.profile">
           {{ getInitials() }}
         </a>
-        <button class="auth-btn logout" (click)="logout()">Logout</button>
+        <button class="auth-btn logout" (click)="logout()">{{ t.logout }}</button>
       } @else {
-        <a class="auth-btn login" routerLink="/login">Sign In</a>
-        <a class="auth-btn register" routerLink="/register">Sign Up</a>
+        <a class="auth-btn login" routerLink="/login">{{ t.signIn }}</a>
+        <a class="auth-btn register" routerLink="/register">{{ t.signUp }}</a>
       }
     </div>
   </div>

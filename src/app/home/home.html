@@ -1,17 +1,59 @@
 <section class="hero">
+  <!-- Carousel Background -->
+  <div class="carousel-container">
+    @for (movie of carouselMovies(); track movie.id; let i = $index) {
+      <div 
+        class="carousel-slide"
+        [class.active]="currentSlide() === i"
+        [style.background-image]="'url(' + getBackdropUrl(movie.backdrop_path) + ')'">
+        <div class="slide-overlay"></div>
+      </div>
+    }
+  </div>
+
+  <!-- Carousel Movie Info -->
+  @if (carouselMovies().length > 0) {
+    <div class="carousel-info fade-in">
+      @for (movie of carouselMovies(); track movie.id; let i = $index) {
+        @if (currentSlide() === i) {
+          <div class="movie-info">
+            <span class="now-playing-badge">{{ t.nowPlaying }}</span>
+            <h2 class="movie-title">{{ movie.title }}</h2>
+            <div class="movie-meta">
+              <span class="rating"><span class="star">★</span> {{ movie.vote_average.toFixed(1) }}</span>
+              <span class="year">{{ movie.release_date | date:'yyyy' }}</span>
+            </div>
+            <p class="movie-overview">{{ movie.overview | slice:0:150 }}{{ movie.overview.length > 150 ? '...' : '' }}</p>
+          </div>
+        }
+      }
+    </div>
+
+    <!-- Carousel Indicators -->
+    <div class="carousel-indicators">
+      @for (movie of carouselMovies(); track movie.id; let i = $index) {
+        <button 
+          class="indicator"
+          [class.active]="currentSlide() === i"
+          (click)="goToSlide(i)">
+        </button>
+      }
+    </div>
+  }
+
   <div class="hero-content">
     <h1 class="hero-title fade-in stagger-1">
-      Cinema Collection
+      {{ t.cinemaCollection }}
     </h1>
     <p class="hero-subtitle fade-in stagger-2">
-      Discover and curate your personal film library.
+      {{ t.discoverMovies }}
     </p>
     <div class="hero-actions fade-in stagger-3">
       <button class="btn-primary" (click)="scrollToMovies()">
-        Browse Collection
+        {{ t.browseCollection }}
       </button>
       <button class="btn-secondary" (click)="scrollToExplore()">
-        Explore Movies
+        {{ t.exploreMovies }}
       </button>
     </div>
   </div>
@@ -19,8 +61,8 @@
 
 <section class="movies-section" id="movies-section">
   <header class="section-header fade-in">
-    <h2 class="section-title">Your Movies</h2>
-    <p class="section-count">{{ (movies$ | async)?.length || 0 }} films</p>
+    <h2 class="section-title">{{ t.yourMovies }}</h2>
+    <p class="section-count">{{ (movies$ | async)?.length || 0 }} {{ t.films }}</p>
   </header>
   
   <div class="movies-grid">
@@ -33,10 +75,10 @@
 
   <div class="empty-state fade-in" *ngIf="(movies$ | async)?.length === 0">
     <div class="empty-content">
-      <h3>No movies yet</h3>
-      <p>Start building your collection.</p>
+      <h3>{{ t.noMoviesYet }}</h3>
+      <p>{{ t.startBuilding }}</p>
       <button class="btn-primary" (click)="scrollToExplore()">
-        Explore TMDB
+        {{ t.exploreTmdb }}
       </button>
     </div>
   </div>
@@ -44,8 +86,8 @@
 
 <section class="explore-section" id="explore-section">
   <header class="section-header fade-in">
-    <h2 class="section-title">Explore Movies</h2>
-    <p class="section-subtitle">Discover movies from The Movie Database</p>
+    <h2 class="section-title">{{ t.exploreMovies }}</h2>
+    <p class="section-subtitle">{{ t.discoverTmdb }}</p>
   </header>
 
   <div class="explore-toolbar fade-in">
@@ -53,11 +95,11 @@
       <span class="search-icon"></span>
       <input 
         type="text" 
-        placeholder="Search movies..."
+        [placeholder]="t.searchPlaceholder"
         [ngModel]="tmdbSearchQuery()"
         (ngModelChange)="tmdbSearchQuery.set($event)"
         (keyup.enter)="searchTmdbMovies()">
-      <button class="search-btn" (click)="searchTmdbMovies()">Search</button>
+      <button class="search-btn" (click)="searchTmdbMovies()">{{ t.search }}</button>
     </div>
 
     <div class="explore-categories">
@@ -65,32 +107,32 @@
         class="category-btn" 
         [class.active]="tmdbCategory() === 'popular'"
         (click)="changeCategory('popular')">
-        Popular
+        {{ t.popular }}
       </button>
       <button 
         class="category-btn" 
         [class.active]="tmdbCategory() === 'top_rated'"
         (click)="changeCategory('top_rated')">
-        Top Rated
+        {{ t.topRated }}
       </button>
       <button 
         class="category-btn" 
         [class.active]="tmdbCategory() === 'now_playing'"
         (click)="changeCategory('now_playing')">
-        Now Playing
+        {{ t.nowPlaying }}
       </button>
       <button 
         class="category-btn" 
         [class.active]="tmdbCategory() === 'upcoming'"
         (click)="changeCategory('upcoming')">
-        Upcoming
+        {{ t.upcoming }}
       </button>
     </div>
   </div>
 
   <div class="loading-state" *ngIf="tmdbLoading()">
     <div class="spinner"></div>
-    <p>Loading movies...</p>
+    <p>{{ t.loading }}</p>
   </div>
 
   <div class="tmdb-grid" *ngIf="!tmdbLoading()">
@@ -123,15 +165,15 @@
           [class.adding]="isAddingMovie(movie.id)"
           [disabled]="isMovieAdded(movie.id) || isAddingMovie(movie.id)"
           (click)="addToCollection(movie)">
-          <span *ngIf="isAddingMovie(movie.id)">Adding...</span>
-          <span *ngIf="isMovieAdded(movie.id)">✓ Added</span>
-          <span *ngIf="!isAddingMovie(movie.id) && !isMovieAdded(movie.id)">+ Add to Collection</span>
+          <span *ngIf="isAddingMovie(movie.id)">{{ t.loading }}</span>
+          <span *ngIf="isMovieAdded(movie.id)">✓</span>
+          <span *ngIf="!isAddingMovie(movie.id) && !isMovieAdded(movie.id)">+ {{ t.addToCollection }}</span>
         </button>
       </div>
     </div>
   </div>
 
   <div class="no-results fade-in" *ngIf="!tmdbLoading() && tmdbMovies().length === 0">
-    <p>No movies found. Try a different search.</p>
+    <p>{{ t.noMoviesFound }}</p>
   </div>
 </section>

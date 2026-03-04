@@ -4,8 +4,6 @@ export interface User {
   password?: string;
   firstName?: string;
   lastName?: string;
-  age?: number;
-  points?: number;
   createdAt?: Date;
 }
 

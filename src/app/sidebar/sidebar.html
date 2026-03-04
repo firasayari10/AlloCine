@@ -4,14 +4,14 @@
   
   <aside class="sidebar" [class.open]="isOpen">
     <div class="sidebar-header">
-      <span class="sidebar-title">Menu</span>
+      <span class="sidebar-title">{{ t.menu }}</span>
       <button class="close-btn" (click)="closeSidebar()">
         ✕
       </button>
     </div>
 
     <nav class="sidebar-nav">
-      @for (item of navItems; track item.route) {
+      @for (item of navItems(); track item.route) {
         @if (!item.requiresAuth || authService.isAuthenticated()) {
           <a class="nav-item"
              [routerLink]="item.route"
@@ -28,10 +28,10 @@
     @if (authService.isAuthenticated()) {
       <div class="sidebar-divider"></div>
       <div class="sidebar-section">
-        <h3 class="section-title">Account</h3>
+        <h3 class="section-title">{{ t.account }}</h3>
         <nav class="sidebar-nav">
           <a class="nav-item" routerLink="/profile" routerLinkActive="active" (click)="closeSidebar()">
-            <span class="nav-label">My Profile</span>
+            <span class="nav-label">{{ t.myProfile }}</span>
             <span class="nav-arrow">›</span>
           </a>
         </nav>
@@ -41,22 +41,22 @@
     <div class="sidebar-divider"></div>
 
     <div class="sidebar-section">
-      <h3 class="section-title">Explore</h3>
+      <h3 class="section-title">{{ t.explore }}</h3>
       <nav class="sidebar-nav">
         <a class="nav-item" (click)="navigateToCategory('popular')">
-          <span class="nav-label">Popular</span>
+          <span class="nav-label">{{ t.popular }}</span>
           <span class="nav-arrow">›</span>
         </a>
         <a class="nav-item" (click)="navigateToCategory('top_rated')">
-          <span class="nav-label">Top Rated</span>
+          <span class="nav-label">{{ t.topRated }}</span>
           <span class="nav-arrow">›</span>
         </a>
         <a class="nav-item" (click)="navigateToCategory('now_playing')">
-          <span class="nav-label">Now Playing</span>
+          <span class="nav-label">{{ t.nowPlaying }}</span>
           <span class="nav-arrow">›</span>
         </a>
         <a class="nav-item" (click)="navigateToCategory('upcoming')">
-          <span class="nav-label">Upcoming</span>
+          <span class="nav-label">{{ t.upcoming }}</span>
           <span class="nav-arrow">›</span>
         </a>
       </nav>

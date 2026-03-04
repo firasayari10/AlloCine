@@ -1,0 +1,239 @@
+.my-reviews-page {
+  min-height: 100vh;
+  padding: 80px 24px 40px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.page-header {
+  margin-bottom: 40px;
+
+  h1 {
+    font-size: 32px;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 8px;
+  }
+
+  .subtitle {
+    font-size: 16px;
+    color: var(--text-secondary);
+  }
+}
+
+.loading-state, .empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 80px 24px;
+  text-align: center;
+
+  .spinner {
+    width: 40px;
+    height: 40px;
+    border: 3px solid var(--border-color);
+    border-top-color: var(--accent);
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+    margin-bottom: 16px;
+  }
+
+  i {
+    font-size: 64px;
+    color: var(--text-tertiary);
+    margin-bottom: 24px;
+  }
+
+  h2 {
+    font-size: 24px;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 8px;
+  }
+
+  p {
+    font-size: 16px;
+    color: var(--text-secondary);
+    margin-bottom: 24px;
+    max-width: 400px;
+  }
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.btn-primary {
+  display: inline-flex;
+  align-items: center;
+  padding: 12px 24px;
+  background: linear-gradient(135deg, #6366f1, #8b5cf6);
+  color: #fff;
+  font-size: 15px;
+  font-weight: 500;
+  border: none;
+  border-radius: 8px;
+  text-decoration: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 20px rgba(99, 102, 241, 0.4);
+  }
+}
+
+.reviews-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.review-card {
+  display: grid;
+  grid-template-columns: 120px 1fr;
+  gap: 20px;
+  background: var(--card-bg);
+  border: 1px solid var(--border-color);
+  border-radius: 16px;
+  padding: 20px;
+  transition: all 0.2s ease;
+
+  &:hover {
+    border-color: var(--accent);
+    box-shadow: var(--shadow-md);
+  }
+
+  @media (max-width: 600px) {
+    grid-template-columns: 80px 1fr;
+    gap: 16px;
+    padding: 16px;
+  }
+}
+
+.movie-poster {
+  position: relative;
+  aspect-ratio: 2/3;
+  border-radius: 8px;
+  overflow: hidden;
+  background: var(--bg-tertiary);
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .poster-fallback {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--bg-tertiary);
+
+    span {
+      font-size: 32px;
+      font-weight: 600;
+      color: var(--text-tertiary);
+    }
+  }
+
+  img + .poster-fallback {
+    display: none;
+  }
+}
+
+.review-content {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.movie-title {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--text-primary);
+  text-decoration: none;
+  transition: color 0.2s ease;
+
+  &:hover {
+    color: var(--accent);
+  }
+}
+
+.movie-meta {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  color: var(--text-secondary);
+
+  .year::before {
+    content: '·';
+    margin-right: 8px;
+  }
+}
+
+.rating {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 4px 0;
+
+  .stars {
+    display: flex;
+    gap: 2px;
+
+    .star {
+      font-size: 14px;
+
+      &.filled {
+        color: #f59e0b;
+      }
+
+      &.empty {
+        color: var(--border-color);
+      }
+    }
+  }
+
+  .rating-value {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-primary);
+  }
+}
+
+.review-text {
+  font-size: 15px;
+  line-height: 1.6;
+  color: var(--text-primary);
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  margin: 8px 0;
+}
+
+.review-footer {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-top: auto;
+  padding-top: 8px;
+
+  .review-date {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 13px;
+    color: var(--text-tertiary);
+
+    i {
+      font-size: 12px;
+    }
+  }
+}

@@ -1,9 +1,10 @@
-import { Component, inject, signal, OnInit } from '@angular/core';
+import { Component, inject, signal, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule, AsyncPipe, DatePipe } from '@angular/common';
 import { RouterModule, ActivatedRoute } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { MoviesApiService } from '../services/movies-api';
 import { TmdbService } from '../services/tmdb.service';
+import { TranslationService } from '../services/translation.service';
 import { Observable } from 'rxjs';
 import { Movie } from '../models/movie';
 import { TmdbMovie } from '../models/tmdb-movie';
@@ -17,12 +18,23 @@ import { toast } from 'ngx-sonner';
   templateUrl: './home.html',
   styleUrls: ['./home.scss']
 })
-export class Home implements OnInit {
+export class Home implements OnInit, OnDestroy {
   private readonly moviesApi = inject(MoviesApiService);
   private readonly tmdbService = inject(TmdbService);
   private readonly route = inject(ActivatedRoute);
+  readonly translationService = inject(TranslationService);
+
+  get t() {
+    return this.translationService.t;
+  }
   
   movies$: Observable<Movie[]> = this.moviesApi.getMovies();
+  
+  // Carousel state
+  carouselMovies = signal<TmdbMovie[]>([]);
+  currentSlide = signal(0);
+  carouselLoading = signal(true);
+  private carouselInterval: any;
   
   tmdbMovies = signal<TmdbMovie[]>([]);
   tmdbCategory = signal<'popular' | 'top_rated' | 'now_playing' | 'upcoming'>('popular');
@@ -41,6 +53,59 @@ export class Home implements OnInit {
     });
     
     this.loadTmdbMovies();
+    this.loadCarouselMovies();
+  }
+
+  ngOnDestroy() {
+    this.stopCarousel();
+  }
+
+  loadCarouselMovies() {
+    this.carouselLoading.set(true);
+    console.log('Loading carousel movies...');
+    this.tmdbService.getNowPlayingMovies().subscribe({
+      next: (response) => {
+        console.log('TMDB response:', response);
+        // Get top 5 movies with backdrop images for carousel
+        const moviesWithBackdrop = response.results
+          .filter(m => m.backdrop_path)
+          .slice(0, 5);
+        console.log('Carousel movies:', moviesWithBackdrop);
+        this.carouselMovies.set(moviesWithBackdrop);
+        this.carouselLoading.set(false);
+        this.startCarousel();
+      },
+      error: (err) => {
+        console.error('Failed to load carousel movies:', err);
+        this.carouselLoading.set(false);
+      }
+    });
+  }
+
+  startCarousel() {
+    this.stopCarousel();
+    this.carouselInterval = setInterval(() => {
+      const movies = this.carouselMovies();
+      if (movies.length > 0) {
+        this.currentSlide.set((this.currentSlide() + 1) % movies.length);
+      }
+    }, 5000); // Change slide every 5 seconds
+  }
+
+  stopCarousel() {
+    if (this.carouselInterval) {
+      clearInterval(this.carouselInterval);
+    }
+  }
+
+  goToSlide(index: number) {
+    this.currentSlide.set(index);
+    this.startCarousel(); // Reset timer when manually changing
+  }
+
+  getBackdropUrl(backdropPath: string | null): string {
+    if (!backdropPath) return '';
+    return `https://image.tmdb.org/t/p/original${backdropPath}`;
   }
 
   scrollToMovies() {

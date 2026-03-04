@@ -10,6 +10,7 @@ import { LoginComponent } from './auth/login/login';
 import { RegisterComponent } from './auth/register/register';
 import { ForgotPasswordComponent } from './auth/forgot-password/forgot-password';
 import { ProfileComponent } from './profile/profile';
+import { MyReviewsComponent } from './my-reviews/my-reviews.component';
 import { authGuard, guestGuard } from './guards/auth.guard';
 
 
@@ -20,6 +21,7 @@ export const routes: Routes = [
     {path:'movie/:id',component:MovieDetailComponent},
     {path:'update-movie/:id',component:UpdateMovie, canActivate: [authGuard]},
     {path:'profile',component:ProfileComponent, canActivate: [authGuard]},
+    {path:'my-reviews',component:MyReviewsComponent, canActivate: [authGuard]},
     {path:'login',component:LoginComponent, canActivate: [guestGuard]},
     {path:'register',component:RegisterComponent, canActivate: [guestGuard]},
     {path:'forgot-password',component:ForgotPasswordComponent, canActivate: [guestGuard]}

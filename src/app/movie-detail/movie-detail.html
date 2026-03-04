@@ -1,7 +1,7 @@
 <section class="movie-detail" *ngIf="!loading && movie">
   <button class="back-btn" (click)="goBack()">
     <span class="arrow">←</span>
-    <span>Back</span>
+    <span>{{ t.back }}</span>
   </button>
 
   <div class="movie-container">
@@ -41,13 +41,13 @@
       </header>
 
       <div class="synopsis" *ngIf="movie.synopsis">
-        <h2>Synopsis</h2>
+        <h2>{{ t.synopsis }}</h2>
         <p>{{ movie.synopsis }}</p>
       </div>
 
       <div class="actions">
         <a class="btn-primary" [routerLink]="['/update-movie', movie.id]">
-          Edit Movie
+          {{ t.editMovie }}
         </a>
       </div>
     </div>
@@ -56,12 +56,12 @@
   <!-- Reviews Section -->
   <div class="reviews-section">
     <div class="reviews-header">
-      <h2>Reviews <span class="review-count">({{ reviews().length }})</span></h2>
+      <h2>{{ t.reviews }} <span class="review-count">({{ reviews().length }})</span></h2>
       <button class="btn-add-review" (click)="openReviewForm()">
         @if (userReview()) {
-          <i class="bi bi-pencil"></i> Edit Your Review
+          <i class="bi bi-pencil"></i> {{ t.editYourReview }}
         } @else {
-          <i class="bi bi-plus-lg"></i> Write a Review
+          <i class="bi bi-plus-lg"></i> {{ t.writeReview }}
         }
       </button>
     </div>
@@ -71,7 +71,7 @@
       <div class="review-form-overlay" (click)="cancelReview()">
         <div class="review-form-card" (click)="$event.stopPropagation()">
           <div class="form-header">
-            <h3>{{ editingReview() ? 'Edit Your Review' : 'Write a Review' }}</h3>
+            <h3>{{ editingReview() ? t.editYourReview : t.writeReview }}</h3>
             <button class="close-btn" (click)="cancelReview()">
               <i class="bi bi-x-lg"></i>
             </button>
@@ -79,7 +79,7 @@
 
           <div class="form-body">
             <div class="rating-input">
-              <label>Your Rating</label>
+              <label>{{ t.yourRating }}</label>
               <div class="stars-select">
                 @for (i of [1,2,3,4,5,6,7,8,9,10]; track i) {
                   <button 
@@ -95,19 +95,19 @@
             </div>
 
             <div class="text-input">
-              <label for="reviewText">Your Review</label>
+              <label for="reviewText">{{ t.yourReview }}</label>
               <textarea 
                 id="reviewText"
                 [(ngModel)]="reviewForm.text"
-                placeholder="Share your thoughts about this movie..."
+                [placeholder]="translationService.isEnglish() ? 'Share your thoughts about this movie...' : 'Partagez vos impressions sur ce film...'"
                 rows="5"></textarea>
             </div>
           </div>
 
           <div class="form-actions">
-            <button class="btn-secondary" (click)="cancelReview()">Cancel</button>
-            <button class="btn-primary" (click)="submitReview()">
-              {{ editingReview() ? 'Update Review' : 'Submit Review' }}
+            <button class="btn-secondary" (click)="cancelReview()">{{ t.cancel }}</button>
+            <button class="btn-submit" (click)="submitReview()">
+              {{ editingReview() ? t.updateReview : t.submitReview }}
             </button>
           </div>
         </div>
@@ -119,12 +119,12 @@
       @if (reviewsLoading()) {
         <div class="reviews-loading">
           <div class="spinner-small"></div>
-          <p>Loading reviews...</p>
+          <p>{{ t.loading }}</p>
         </div>
       } @else if (reviews().length === 0) {
         <div class="no-reviews">
           <i class="bi bi-chat-quote"></i>
-          <p>No reviews yet. Be the first to review this movie!</p>
+          <p>{{ t.beFirstToReview }}</p>
         </div>
       } @else {
         @for (review of reviews(); track review.id) {
@@ -155,10 +155,10 @@
             @if (isOwnReview(review)) {
               <div class="review-actions">
                 <button class="btn-edit" (click)="openReviewForm()">
-                  <i class="bi bi-pencil"></i> Edit
+                  <i class="bi bi-pencil"></i> {{ t.edit }}
                 </button>
                 <button class="btn-delete" (click)="deleteReview(review)">
-                  <i class="bi bi-trash"></i> Delete
+                  <i class="bi bi-trash"></i> {{ t.delete }}
                 </button>
               </div>
             }

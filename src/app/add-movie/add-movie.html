@@ -1,40 +1,40 @@
 <section class="add-page fade-in">
   <a class="back-btn" routerLink="/">
     <span class="arrow">←</span>
-    <span>Back</span>
+    <span>{{ t.back }}</span>
   </a>
 
   <div class="page-container">
     <header class="page-header">
-      <h1>Add Movie</h1>
-      <p class="subtitle">Add a new film to your collection</p>
+      <h1>{{ t.addNewMovie }}</h1>
+      <p class="subtitle">{{ translationService.isEnglish() ? 'Add a new film to your collection' : 'Ajoutez un nouveau film à votre collection' }}</p>
     </header>
 
     <form class="form-container" (ngSubmit)="addMovie()">
       <div class="form-group">
-        <label for="title">Title</label>
+        <label for="title">{{ t.movieTitle }}</label>
         <input 
           type="text" 
           id="title" 
           name="title" 
           [(ngModel)]="movie.title"
-          placeholder="Enter movie title"
+          [placeholder]="translationService.isEnglish() ? 'Enter movie title' : 'Entrez le titre du film'"
           required>
       </div>
 
       <div class="form-row">
         <div class="form-group">
-          <label for="director">Director</label>
+          <label for="director">{{ t.movieDirector }}</label>
           <input 
             type="text" 
             id="director" 
             name="director" 
             [(ngModel)]="movie.director"
-            placeholder="Enter director name">
+            [placeholder]="translationService.isEnglish() ? 'Enter director name' : 'Entrez le nom du réalisateur'">
         </div>
 
         <div class="form-group">
-          <label for="releaseDate">Release Date</label>
+          <label for="releaseDate">{{ t.movieReleaseDate }}</label>
           <input 
             type="date" 
             id="releaseDate" 
@@ -44,18 +44,18 @@
       </div>
 
       <div class="form-group">
-        <label for="synopsis">Synopsis</label>
+        <label for="synopsis">{{ t.movieSynopsis }}</label>
         <textarea 
           id="synopsis" 
           name="synopsis" 
           [(ngModel)]="movie.synopsis"
-          placeholder="Enter movie synopsis"
+          [placeholder]="translationService.isEnglish() ? 'Enter movie synopsis' : 'Entrez le synopsis du film'"
           rows="5"></textarea>
       </div>
 
       <div class="form-row">
         <div class="form-group">
-          <label for="rate">Rating</label>
+          <label for="rate">{{ t.movieRating }}</label>
           <input 
             type="number" 
             id="rate" 
@@ -68,22 +68,22 @@
         </div>
 
         <div class="form-group">
-          <label for="image">Image URL</label>
+          <label for="image">{{ t.movieImage }}</label>
           <input 
             type="text" 
             id="image" 
             name="image" 
             [(ngModel)]="movie.image"
-            placeholder="Enter image URL">
+            [placeholder]="translationService.isEnglish() ? 'Enter image URL' : 'Entrez URL de image'">
         </div>
       </div>
 
       <div class="form-actions">
         <a class="btn-secondary" routerLink="/">
-          Cancel
+          {{ t.cancel }}
         </a>
         <button type="submit" class="btn-primary">
-          Add Movie
+          {{ t.saveMovie }}
         </button>
       </div>
     </form>

@@ -1,5 +1,6 @@
-import { Component, OnInit, signal, computed } from '@angular/core';
+import { Component, OnInit, signal, computed, inject } from '@angular/core';
 import { MoviesApiService } from '../services/movies-api'; 
+import { TranslationService } from '../services/translation.service';
 import { Movie } from '../models/movie';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
@@ -14,6 +15,13 @@ import { toast } from 'ngx-sonner';
   imports: [CommonModule, RouterLink, FormsModule]
 })
 export class MoviesListComponent implements OnInit {
+  private readonly moviesApi = inject(MoviesApiService);
+  readonly translationService = inject(TranslationService);
+
+  get t() {
+    return this.translationService.t;
+  }
+
   movies = signal<Movie[]>([]); 
   
   searchQuery = signal('');
@@ -84,8 +92,6 @@ export class MoviesListComponent implements OnInit {
     
     return pages;
   });
-
-  constructor(private moviesApi: MoviesApiService) {}
 
   ngOnInit(): void {
     this.loadMovies();

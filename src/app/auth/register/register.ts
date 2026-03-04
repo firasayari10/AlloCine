@@ -3,6 +3,7 @@ import { FormsModule } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { AuthService } from '../../services/auth.service';
+import { TranslationService } from '../../services/translation.service';
 import { toast } from 'ngx-sonner';
 
 @Component({
@@ -15,6 +16,11 @@ import { toast } from 'ngx-sonner';
 export class RegisterComponent {
   private readonly authService = inject(AuthService);
   private readonly router = inject(Router);
+  readonly translationService = inject(TranslationService);
+
+  get t() {
+    return this.translationService.t;
+  }
 
   firstName = '';
   lastName = '';

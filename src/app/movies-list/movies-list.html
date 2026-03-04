@@ -1,31 +1,31 @@
 <section class="movies-page fade-in">
   <header class="page-header">
     <div class="header-content">
-      <h1>Movie Collection</h1>
-      <p class="subtitle">{{ filteredMovies().length }} films in your library</p>
+      <h1>{{ t.allMovies }}</h1>
+      <p class="subtitle">{{ filteredMovies().length }} {{ t.films }}</p>
     </div>
     <a class="btn-primary" routerLink="/add-movie">
-      + Add Movie
+      + {{ t.addMovie }}
     </a>
   </header>
 
   <div class="toolbar">
     <div class="search-box">
-      <span class="search-icon">🔍</span>
+      <span class="search-icon"></span>
       <input 
         type="text" 
-        placeholder="Search movies, directors..."
+        [placeholder]="t.searchPlaceholder"
         [ngModel]="searchQuery()"
         (ngModelChange)="onSearch($event)">
     </div>
 
     <div class="sort-controls">
-      <label>Sort by:</label>
+      <label>{{ t.sortBy }}:</label>
       <select [ngModel]="sortField()" (ngModelChange)="sortField.set($event)">
-        <option value="title">Title</option>
-        <option value="releaseDate">Release Date</option>
-        <option value="rate">Rating</option>
-        <option value="director">Director</option>
+        <option value="title">{{ t.title }}</option>
+        <option value="releaseDate">{{ t.releaseDate }}</option>
+        <option value="rate">{{ t.rating }}</option>
+        <option value="director">{{ t.director }}</option>
       </select>
       <button class="sort-direction" (click)="sortDirection.set(sortDirection() === 'asc' ? 'desc' : 'asc')">
         {{ sortDirection() === 'asc' ? '↑' : '↓' }}
@@ -38,18 +38,18 @@
       <thead>
         <tr>
           <th class="sortable" (click)="toggleSort('title')">
-            Title {{ getSortIcon('title') }}
+            {{ t.title }} {{ getSortIcon('title') }}
           </th>
           <th class="sortable" (click)="toggleSort('director')">
-            Director {{ getSortIcon('director') }}
+            {{ t.director }} {{ getSortIcon('director') }}
           </th>
           <th class="sortable" (click)="toggleSort('releaseDate')">
-            Released {{ getSortIcon('releaseDate') }}
+            {{ t.releaseDate }} {{ getSortIcon('releaseDate') }}
           </th>
           <th class="sortable" (click)="toggleSort('rate')">
-            Rating {{ getSortIcon('rate') }}
+            {{ t.rating }} {{ getSortIcon('rate') }}
           </th>
-          <th>Synopsis</th>
+          <th>{{ t.synopsis }}</th>
           <th>Actions</th>
         </tr>
       </thead>
@@ -81,10 +81,10 @@
             <span class="synopsis-text">{{ movie.synopsis || '—' }}</span>
           </td>
           <td class="actions-cell" (click)="$event.stopPropagation()">
-            <a class="action-btn edit" [routerLink]="['/update-movie', movie.id]" title="Edit">
+            <a class="action-btn edit" [routerLink]="['/update-movie', movie.id]" [title]="t.edit">
               ✏️
             </a>
-            <button class="action-btn delete" (click)="deleteMovie(movie.id)" title="Delete">
+            <button class="action-btn delete" (click)="deleteMovie(movie.id)" [title]="t.delete">
               🗑️
             </button>
           </td>
@@ -93,9 +93,9 @@
     </table>
 
     <div class="empty-state" *ngIf="filteredMovies().length === 0">
-      <p *ngIf="searchQuery()">No movies found matching "{{ searchQuery() }}"</p>
-      <p *ngIf="!searchQuery()">No movies in your collection yet.</p>
-      <a class="btn-primary" routerLink="/add-movie">Add Your First Movie</a>
+      <p *ngIf="searchQuery()">{{ t.noMoviesFound }}</p>
+      <p *ngIf="!searchQuery()">{{ t.noMoviesYet }}</p>
+      <a class="btn-primary" routerLink="/add-movie">{{ t.addMovie }}</a>
     </div>
   </div>
 

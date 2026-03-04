@@ -1,7 +1,8 @@
-import { Component, Input, Output, EventEmitter, inject } from '@angular/core';
+import { Component, Input, Output, EventEmitter, inject, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterLink, RouterLinkActive } from '@angular/router';
 import { AuthService } from '../services/auth.service';
+import { TranslationService } from '../services/translation.service';
 
 @Component({
   selector: 'app-sidebar',
@@ -16,13 +17,19 @@ export class Sidebar {
   @Output() categorySelect = new EventEmitter<string>();
 
   readonly authService = inject(AuthService);
+  readonly translationService = inject(TranslationService);
   private readonly router = inject(Router);
 
-  navItems = [
-    { label: 'Home', route: '/', exact: true },
-    { label: 'Movies', route: '/movies', exact: false },
-    { label: 'Add Movie', route: '/add-movie', exact: false, requiresAuth: true },
-  ];
+  get t() {
+    return this.translationService.t;
+  }
+
+  navItems = computed(() => [
+    { label: this.t.home, route: '/', exact: true },
+    { label: this.t.movies, route: '/movies', exact: false },
+    { label: this.t.myReviews, route: '/my-reviews', exact: false, requiresAuth: true },
+    { label: this.t.addMovie, route: '/add-movie', exact: false, requiresAuth: true },
+  ]);
 
   closeSidebar() {
     this.close.emit();

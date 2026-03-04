@@ -5,6 +5,7 @@ import { FormsModule } from '@angular/forms';
 import { MoviesApiService } from '../services/movies-api';
 import { ReviewService } from '../services/review.service';
 import { AuthService } from '../services/auth.service';
+import { TranslationService } from '../services/translation.service';
 import { Movie } from '../models/movie';
 import { Review } from '../models/review';
 import { toast } from 'ngx-sonner';
@@ -22,6 +23,11 @@ export class MovieDetailComponent implements OnInit {
   private readonly moviesApi = inject(MoviesApiService);
   private readonly reviewService = inject(ReviewService);
   readonly authService = inject(AuthService);
+  readonly translationService = inject(TranslationService);
+
+  get t() {
+    return this.translationService.t;
+  }
   
   movie: Movie | null = null;
   loading = true;
@@ -59,11 +65,18 @@ export class MovieDetailComponent implements OnInit {
     this.reviewsLoading.set(true);
     this.reviewService.getReviewsByMovieId(movieId).subscribe({
       next: (reviews) => {
-        this.reviews.set(reviews);
+        // Normalize: backend might use 'film' instead of 'movie'
+        const normalizedReviews = reviews.map(r => ({
+          ...r,
+          movie: r.movie || r.film
+        }));
+        console.log('Loaded reviews:', normalizedReviews);
+        this.reviews.set(normalizedReviews);
         this.reviewsLoading.set(false);
         this.checkUserReview();
       },
-      error: () => {
+      error: (err) => {
+        console.error('Error loading reviews:', err);
         this.reviewsLoading.set(false);
       }
     });
@@ -148,8 +161,6 @@ export class MovieDetailComponent implements OnInit {
       };
       
       console.log('Adding review:', JSON.stringify(reviewToAdd));
-      console.log('User ID:', user.id);
-      console.log('Movie ID:', this.movie.id);
       
       this.reviewService.createReview(reviewToAdd).subscribe({
         next: () => {

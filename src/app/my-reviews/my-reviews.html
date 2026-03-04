@@ -1,0 +1,72 @@
+<section class="my-reviews-page fade-in">
+  <div class="page-header">
+    <h1>{{ t.myReviewsTitle }}</h1>
+    <p class="subtitle">{{ t.yourMovieReviews }}</p>
+  </div>
+
+  @if (loading()) {
+    <div class="loading-state">
+      <div class="spinner"></div>
+      <p>{{ t.loading }}</p>
+    </div>
+  } @else if (reviews().length === 0) {
+    <div class="empty-state">
+      <i class="bi bi-chat-quote"></i>
+      <h2>{{ t.noReviewsYet }}</h2>
+      <p>{{ t.noReviewsMessage }}</p>
+      <a routerLink="/" class="btn-primary">{{ t.browseMovies }}</a>
+    </div>
+  } @else {
+    <div class="reviews-grid">
+      @for (review of reviews(); track review.id) {
+        @let movieData = review.movie || review.film;
+        <div class="review-card">
+          <a [routerLink]="['/movie', movieData?.id]" class="movie-poster">
+            @if (movieData?.image || movieData?.id) {
+              <img [src]="getMovieImage(review)" [alt]="movieData?.title || 'Movie'" onerror="this.style.display='none'">
+            }
+            <div class="poster-fallback">
+              <span>{{ movieData?.title?.charAt(0) || '?' }}</span>
+            </div>
+          </a>
+          
+          <div class="review-content">
+            <a [routerLink]="['/movie', movieData?.id]" class="movie-title">
+              {{ movieData?.title || 'Unknown Movie' }}
+            </a>
+            
+            <div class="movie-meta">
+              @if (movieData?.director) {
+                <span>{{ movieData!.director }}</span>
+              }
+              @if (movieData?.releaseDate) {
+                <span class="year">{{ movieData!.releaseDate | date:'yyyy' }}</span>
+              }
+            </div>
+
+            <div class="rating">
+              <div class="stars">
+                @for (s of getStars(review.rate); track $index) {
+                  <span class="star filled">★</span>
+                }
+                @for (s of getEmptyStars(review.rate); track $index) {
+                  <span class="star empty">★</span>
+                }
+              </div>
+              <span class="rating-value">{{ review.rate }}/10</span>
+            </div>
+
+            <p class="review-text">{{ review.text }}</p>
+
+            <div class="review-footer">
+              <span class="review-date">
+                <i class="bi bi-calendar3"></i>
+                {{ review.reviewDate | date:'MMM d, yyyy' }}
+              </span>
+            </div>
+          </div>
+        </div>
+      }
+    </div>
+  }
+</section>

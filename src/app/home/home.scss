@@ -5,35 +5,189 @@
 
 /* Hero Section */
 .hero {
-  min-height: 70vh;
+  min-height: 80vh;
   display: flex;
   align-items: center;
   justify-content: center;
   padding: 120px 24px 80px;
   text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Carousel Styles */
+.carousel-container {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+}
+
+.carousel-slide {
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  background-position: center top;
+  opacity: 0;
+  transition: opacity 1.2s ease-in-out;
+
+  &.active {
+    opacity: 1;
+  }
+
+  .slide-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      to bottom,
+      rgba(0, 0, 0, 0.3) 0%,
+      rgba(0, 0, 0, 0.5) 50%,
+      rgba(0, 0, 0, 0.9) 100%
+    );
+  }
+}
+
+.carousel-info {
+  position: absolute;
+  left: 40px;
+  bottom: 140px;
+  text-align: left;
+  max-width: 500px;
+  z-index: 2;
+
+  @media (max-width: 768px) {
+    left: 24px;
+    right: 24px;
+    bottom: 180px;
+    max-width: none;
+  }
+}
+
+.movie-info {
+  animation: slideUp 0.6s ease-out;
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.now-playing-badge {
+  display: inline-block;
+  padding: 6px 14px;
+  background: rgba(239, 68, 68, 0.9);
+  color: #fff;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  border-radius: 20px;
+  margin-bottom: 12px;
+}
+
+.carousel-info .movie-title {
+  font-size: clamp(24px, 4vw, 36px);
+  font-weight: 700;
+  color: #fff;
+  margin-bottom: 8px;
+  line-height: 1.2;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+}
+
+.carousel-info .movie-meta {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 12px;
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.85);
+
+  .rating {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-weight: 600;
+
+    .star {
+      color: #fbbf24;
+    }
+  }
+
+  .year {
+    opacity: 0.8;
+  }
+}
+
+.carousel-info .movie-overview {
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.75);
+  line-height: 1.6;
+  margin: 0;
+}
+
+.carousel-indicators {
+  position: absolute;
+  left: 40px;
+  bottom: 100px;
+  display: flex;
+  gap: 10px;
+  z-index: 2;
+
+  @media (max-width: 768px) {
+    left: 24px;
+    bottom: 140px;
+  }
+}
+
+.indicator {
+  width: 40px;
+  height: 4px;
+  background: rgba(255, 255, 255, 0.3);
+  border: none;
+  border-radius: 2px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  padding: 0;
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.5);
+  }
+
+  &.active {
+    background: #fff;
+    width: 60px;
+  }
 }
 
 .hero-content {
   max-width: 680px;
+  position: relative;
+  z-index: 3;
 }
 
 .hero-title {
   font-size: clamp(40px, 8vw, 72px);
   font-weight: 600;
-  color: var(--text-primary);
+  color: #fff;
   letter-spacing: -0.03em;
   line-height: 1.05;
   margin-bottom: 16px;
   opacity: 0;
+  text-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
 }
 
 .hero-subtitle {
   font-size: 19px;
   font-weight: 400;
-  color: var(--text-secondary);
+  color: rgba(255, 255, 255, 0.85);
   line-height: 1.5;
   margin-bottom: 32px;
   opacity: 0;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
 }
 
 .hero-actions {
@@ -45,6 +199,54 @@
 }
 
 /* Buttons */
+.hero .btn-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 14px 28px;
+  background: #fff;
+  color: #000;
+  font-size: 15px;
+  font-weight: 600;
+  border: none;
+  border-radius: 980px;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  text-decoration: none;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+
+  &:hover {
+    transform: scale(1.05);
+    box-shadow: 0 6px 25px rgba(0, 0, 0, 0.4);
+  }
+
+  &:active {
+    transform: scale(0.98);
+  }
+}
+
+.hero .btn-secondary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 14px 28px;
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(10px);
+  color: #fff;
+  font-size: 15px;
+  font-weight: 500;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 980px;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  text-decoration: none;
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.25);
+    border-color: rgba(255, 255, 255, 0.5);
+  }
+}
+
 .btn-primary {
   display: inline-flex;
   align-items: center;

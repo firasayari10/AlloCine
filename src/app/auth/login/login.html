@@ -2,30 +2,30 @@
   <div class="auth-container">
     <div class="auth-card">
       <header class="auth-header">
-        <h1>Welcome Back</h1>
-        <p>Sign in to your account</p>
+        <h1>{{ t.signIn }}</h1>
+        <p>{{ translationService.isEnglish() ? 'Sign in to your account' : 'Connectez-vous à votre compte' }}</p>
       </header>
 
       <form class="auth-form" (ngSubmit)="login()">
         <div class="form-group">
-          <label for="email">Email</label>
+          <label for="email">{{ t.email }}</label>
           <input 
             type="email" 
             id="email" 
             name="email" 
             [(ngModel)]="email"
-            placeholder="Enter your email"
+            [placeholder]="translationService.isEnglish() ? 'Enter your email' : 'Entrez votre email'"
             required>
         </div>
 
         <div class="form-group">
-          <label for="password">Password</label>
+          <label for="password">{{ t.password }}</label>
           <input 
             type="password" 
             id="password" 
             name="password" 
             [(ngModel)]="password"
-            placeholder="Enter your password"
+            [placeholder]="translationService.isEnglish() ? 'Enter your password' : 'Entrez votre mot de passe'"
             required>
         </div>
 
@@ -34,13 +34,13 @@
         </div>
 
         <button type="submit" class="btn-primary" [disabled]="isLoading">
-          {{ isLoading ? 'Signing in...' : 'Sign In' }}
+          {{ isLoading ? t.loading : t.signIn }}
         </button>
       </form>
 
       <div class="auth-footer">
-        <a routerLink="/forgot-password" class="forgot-link">Forgot password?</a>
-        <p>Don't have an account? <a routerLink="/register">Sign up</a></p>
+        <a routerLink="/forgot-password" class="forgot-link">{{ t.forgotPassword }}</a>
+        <p>{{ t.dontHaveAccount }} <a routerLink="/register">{{ t.signUp }}</a></p>
       </div>
     </div>
   </div>

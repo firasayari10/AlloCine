@@ -1,7 +1,7 @@
 import { Injectable, inject } from '@angular/core';
-import { HttpClient, HttpParams } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { Review, CreateReviewRequest, CheckReviewDTO } from '../models/review';
+import { Review } from '../models/review';
 
 @Injectable({
   providedIn: 'root',
@@ -23,6 +23,10 @@ export class ReviewService {
     return this.httpClient.get<Review[]>(`${this.moviesUrl}/${movieId}/reviews`);
   }
 
+  getReviewsByUserId(userId: number): Observable<Review[]> {
+    return this.httpClient.get<Review[]>(`${this.moviesUrl}/byReviewer/${userId}`);
+  }
+
   createReview(review: any): Observable<Review> {
     return this.httpClient.post<Review>(this.url, review);
   }
@@ -33,24 +37,5 @@ export class ReviewService {
 
   deleteReview(id: number): Observable<void> {
     return this.httpClient.delete<void>(`${this.url}/${id}`);
-  }
-
-  checkUserReview(userId: number, filmId: number): Observable<Review | null> {
-    const params = new HttpParams()
-      .set('userId', userId.toString())
-      .set('filmId', filmId.toString());
-    return this.httpClient.get<Review | null>(`${this.url}/checkAvis`, { params });
-  }
-
-  getReviewsByYear(year: number): Observable<Review[]> {
-    return this.httpClient.get<Review[]>(`${this.url}/byYear/${year}`);
-  }
-
-  getReviewsQuantityByYear(year: number): Observable<number> {
-    return this.httpClient.get<number>(`${this.url}/byYear/${year}/quantity`);
-  }
-
-  getAllYears(): Observable<number[]> {
-    return this.httpClient.get<number[]>(`${this.url}/findAllYears`);
   }
 }
