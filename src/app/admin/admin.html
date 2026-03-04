@@ -1,0 +1,192 @@
+<section class="admin-page fade-in">
+  <header class="page-header">
+    <div class="header-content">
+      <h1>Admin Dashboard</h1>
+      <p class="subtitle">Monitor your application statistics</p>
+    </div>
+  </header>
+
+  <!-- Tabs -->
+  <div class="tabs">
+    <button 
+      class="tab-btn" 
+      [class.active]="activeTab() === 'overview'"
+      (click)="setTab('overview')">
+      <i class="bi bi-bar-chart"></i>
+      Overview
+    </button>
+    <button 
+      class="tab-btn" 
+      [class.active]="activeTab() === 'users'"
+      (click)="setTab('users')">
+      <i class="bi bi-people"></i>
+      Users
+    </button>
+    <button 
+      class="tab-btn" 
+      [class.active]="activeTab() === 'reviews'"
+      (click)="setTab('reviews')">
+      <i class="bi bi-chat-quote"></i>
+      Reviews
+    </button>
+  </div>
+
+  @if (loading()) {
+    <div class="loading-state">
+      <div class="spinner"></div>
+      <p>Loading dashboard...</p>
+    </div>
+  } @else if (stats()) {
+    <!-- Overview Tab -->
+    @if (activeTab() === 'overview') {
+      <div class="dashboard-content">
+        <!-- Stats Cards -->
+        <div class="stats-grid">
+          <div class="stat-card users">
+            <div class="stat-icon">
+              <i class="bi bi-people"></i>
+            </div>
+            <div class="stat-info">
+              <span class="stat-value">{{ stats()!.totalUsers }}</span>
+              <span class="stat-label">Total Users</span>
+            </div>
+          </div>
+
+          <div class="stat-card movies">
+            <div class="stat-icon">
+              <i class="bi bi-film"></i>
+            </div>
+            <div class="stat-info">
+              <span class="stat-value">{{ stats()!.totalMovies }}</span>
+              <span class="stat-label">Total Movies</span>
+            </div>
+          </div>
+
+          <div class="stat-card reviews">
+            <div class="stat-icon">
+              <i class="bi bi-chat-quote"></i>
+            </div>
+            <div class="stat-info">
+              <span class="stat-value">{{ stats()!.totalReviews }}</span>
+              <span class="stat-label">Total Reviews</span>
+            </div>
+          </div>
+
+          <div class="stat-card rating">
+            <div class="stat-icon">
+              <i class="bi bi-star"></i>
+            </div>
+            <div class="stat-info">
+              <span class="stat-value">{{ stats()!.topRatedMovies.length > 0 ? stats()!.topRatedMovies[0].rate : 'N/A' }}</span>
+              <span class="stat-label">Top Rating</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Charts Grid -->
+        <div class="charts-grid">
+          <div class="chart-card">
+            <canvas #moviesChart></canvas>
+          </div>
+          <div class="chart-card">
+            <canvas #reviewsChart></canvas>
+          </div>
+          <div class="chart-card">
+            <canvas #usersChart></canvas>
+          </div>
+          <div class="chart-card">
+            <canvas #ratingsChart></canvas>
+          </div>
+        </div>
+
+        <!-- Quick Links -->
+        <div class="quick-links">
+          <a routerLink="/movies" class="quick-link">
+            <i class="bi bi-film"></i>
+            <span>Manage Movies</span>
+          </a>
+          <a routerLink="/my-reviews" class="quick-link">
+            <i class="bi bi-chat-quote"></i>
+            <span>View Reviews</span>
+          </a>
+          <a routerLink="/add-movie" class="quick-link">
+            <i class="bi bi-plus-circle"></i>
+            <span>Add Movie</span>
+          </a>
+        </div>
+      </div>
+    }
+
+    <!-- Users Tab -->
+    @if (activeTab() === 'users') {
+      <div class="table-section">
+        <h2>Recent Users</h2>
+        <div class="table-container">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Joined</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (user of stats()!.recentUsers; track user.id) {
+                <tr>
+                  <td>{{ user.id }}</td>
+                  <td>{{ user.firstName }} {{ user.lastName }}</td>
+                  <td>{{ user.email }}</td>
+                  <td>{{ user.createdAt | date:'short' }}</td>
+                </tr>
+              } @empty {
+                <tr>
+                  <td colspan="4" class="empty-row">No users found</td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      </div>
+    }
+
+    <!-- Reviews Tab -->
+    @if (activeTab() === 'reviews') {
+      <div class="table-section">
+        <h2>Recent Reviews</h2>
+        <div class="table-container">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Movie</th>
+                <th>User</th>
+                <th>Rating</th>
+                <th>Date</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (review of stats()!.recentReviews; track review.id) {
+                <tr>
+                  <td>{{ review.id }}</td>
+                  <td>{{ review.movie?.title || review.film?.title || 'Unknown' }}</td>
+                  <td>{{ review.user?.firstName }} {{ review.user?.lastName }}</td>
+                  <td>
+                    <span class="rating-badge">
+                      <span class="star">★</span> {{ review.rate }}
+                    </span>
+                  </td>
+                  <td>{{ review.reviewDate | date:'short' }}</td>
+                </tr>
+              } @empty {
+                <tr>
+                  <td colspan="5" class="empty-row">No reviews found</td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      </div>
+    }
+  }
+</section>

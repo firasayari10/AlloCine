@@ -62,15 +62,12 @@ export class Home implements OnInit, OnDestroy {
 
   loadCarouselMovies() {
     this.carouselLoading.set(true);
-    console.log('Loading carousel movies...');
     this.tmdbService.getNowPlayingMovies().subscribe({
       next: (response) => {
-        console.log('TMDB response:', response);
         // Get top 5 movies with backdrop images for carousel
         const moviesWithBackdrop = response.results
           .filter(m => m.backdrop_path)
           .slice(0, 5);
-        console.log('Carousel movies:', moviesWithBackdrop);
         this.carouselMovies.set(moviesWithBackdrop);
         this.carouselLoading.set(false);
         this.startCarousel();

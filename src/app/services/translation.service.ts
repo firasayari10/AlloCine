@@ -105,6 +105,18 @@ export interface Translations {
   updateProfile: string;
   profileUpdated: string;
   
+  // Admin
+  adminDashboard: string;
+  overview: string;
+  users: string;
+  totalUsers: string;
+  totalMovies: string;
+  totalReviews: string;
+  recentUsers: string;
+  recentReviews: string;
+  manageMovies: string;
+  viewReviews: string;
+  
   // Common
   loading: string;
   error: string;
@@ -226,6 +238,18 @@ const translations: Record<Language, Translations> = {
     updateProfile: 'Update Profile',
     profileUpdated: 'Profile updated!',
     
+    // Admin
+    adminDashboard: 'Admin Dashboard',
+    overview: 'Overview',
+    users: 'Users',
+    totalUsers: 'Total Users',
+    totalMovies: 'Total Movies',
+    totalReviews: 'Total Reviews',
+    recentUsers: 'Recent Users',
+    recentReviews: 'Recent Reviews',
+    manageMovies: 'Manage Movies',
+    viewReviews: 'View Reviews',
+    
     // Common
     loading: 'Loading...',
     error: 'An error occurred',
@@ -344,6 +368,18 @@ const translations: Record<Language, Translations> = {
     accountSettings: 'Paramètres du Compte',
     updateProfile: 'Mettre à jour le Profil',
     profileUpdated: 'Profil mis à jour !',
+    
+    // Admin
+    adminDashboard: 'Tableau de Bord Admin',
+    overview: 'Aperçu',
+    users: 'Utilisateurs',
+    totalUsers: 'Total Utilisateurs',
+    totalMovies: 'Total Films',
+    totalReviews: 'Total Avis',
+    recentUsers: 'Utilisateurs Récents',
+    recentReviews: 'Avis Récents',
+    manageMovies: 'Gérer les Films',
+    viewReviews: 'Voir les Avis',
     
     // Common
     loading: 'Chargement...',
