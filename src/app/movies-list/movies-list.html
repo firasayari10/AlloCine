@@ -1,0 +1,131 @@
+<section class="movies-page fade-in">
+  <header class="page-header">
+    <div class="header-content">
+      <h1>Movie Collection</h1>
+      <p class="subtitle">{{ filteredMovies().length }} films in your library</p>
+    </div>
+    <a class="btn-primary" routerLink="/add-movie">
+      + Add Movie
+    </a>
+  </header>
+
+  <div class="toolbar">
+    <div class="search-box">
+      <span class="search-icon">🔍</span>
+      <input 
+        type="text" 
+        placeholder="Search movies, directors..."
+        [ngModel]="searchQuery()"
+        (ngModelChange)="onSearch($event)">
+    </div>
+
+    <div class="sort-controls">
+      <label>Sort by:</label>
+      <select [ngModel]="sortField()" (ngModelChange)="sortField.set($event)">
+        <option value="title">Title</option>
+        <option value="releaseDate">Release Date</option>
+        <option value="rate">Rating</option>
+        <option value="director">Director</option>
+      </select>
+      <button class="sort-direction" (click)="sortDirection.set(sortDirection() === 'asc' ? 'desc' : 'asc')">
+        {{ sortDirection() === 'asc' ? '↑' : '↓' }}
+      </button>
+    </div>
+  </div>
+
+  <div class="table-container">
+    <table class="movies-table">
+      <thead>
+        <tr>
+          <th class="sortable" (click)="toggleSort('title')">
+            Title {{ getSortIcon('title') }}
+          </th>
+          <th class="sortable" (click)="toggleSort('director')">
+            Director {{ getSortIcon('director') }}
+          </th>
+          <th class="sortable" (click)="toggleSort('releaseDate')">
+            Released {{ getSortIcon('releaseDate') }}
+          </th>
+          <th class="sortable" (click)="toggleSort('rate')">
+            Rating {{ getSortIcon('rate') }}
+          </th>
+          <th>Synopsis</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let movie of paginatedMovies()" [routerLink]="['/movie', movie.id]" class="clickable-row">
+          <td class="title-cell">
+            <div class="movie-title-wrapper">
+              <div class="movie-poster-mini" *ngIf="movie.image && movie.image.startsWith('http')">
+                <img [src]="movie.image" [alt]="movie.title">
+              </div>
+              <div class="movie-poster-mini" *ngIf="movie.image && !movie.image.startsWith('http')">
+                <img [src]="'http://localhost:8080/movies/' + movie.id + '/image'" [alt]="movie.title">
+              </div>
+              <div class="movie-poster-mini placeholder" *ngIf="!movie.image">
+                {{ movie.title.charAt(0) }}
+              </div>
+              <span class="movie-title">{{ movie.title }}</span>
+            </div>
+          </td>
+          <td>{{ movie.director || '—' }}</td>
+          <td>{{ formatDate(movie.releaseDate) }}</td>
+          <td>
+            <span class="rating-badge" *ngIf="movie.rate">
+              <span class="star">★</span> {{ movie.rate }}
+            </span>
+            <span class="no-rating" *ngIf="!movie.rate">—</span>
+          </td>
+          <td class="synopsis-cell">
+            <span class="synopsis-text">{{ movie.synopsis || '—' }}</span>
+          </td>
+          <td class="actions-cell" (click)="$event.stopPropagation()">
+            <a class="action-btn edit" [routerLink]="['/update-movie', movie.id]" title="Edit">
+              ✏️
+            </a>
+            <button class="action-btn delete" (click)="deleteMovie(movie.id)" title="Delete">
+              🗑️
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="empty-state" *ngIf="filteredMovies().length === 0">
+      <p *ngIf="searchQuery()">No movies found matching "{{ searchQuery() }}"</p>
+      <p *ngIf="!searchQuery()">No movies in your collection yet.</p>
+      <a class="btn-primary" routerLink="/add-movie">Add Your First Movie</a>
+    </div>
+  </div>
+
+  <div class="pagination" *ngIf="totalPages() > 1">
+    <button 
+      class="page-btn" 
+      [disabled]="currentPage() === 1"
+      (click)="prevPage()">
+      ← Previous
+    </button>
+    
+    <div class="page-numbers">
+      <button 
+        *ngFor="let page of pageNumbers()"
+        class="page-num"
+        [class.active]="page === currentPage()"
+        (click)="goToPage(page)">
+        {{ page }}
+      </button>
+    </div>
+    
+    <button 
+      class="page-btn" 
+      [disabled]="currentPage() === totalPages()"
+      (click)="nextPage()">
+      Next →
+    </button>
+  </div>
+
+  <div class="page-info" *ngIf="filteredMovies().length > 0">
+    Showing {{ (currentPage() - 1) * itemsPerPage() + 1 }} - {{ getEndIndex() }} of {{ filteredMovies().length }} movies
+  </div>
+</section>

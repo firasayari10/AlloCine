@@ -1,12 +1,36 @@
-import { Component, signal } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+import { Component, signal, inject } from '@angular/core';
+import { RouterOutlet, ChildrenOutletContexts } from '@angular/router';
+import { Navbar } from './navbar/navbar';
+import { Sidebar } from './sidebar/sidebar';
+import { routeAnimations } from './route-animations';
+import { NgxSonnerToaster } from 'ngx-sonner';
+import { ThemeService } from './services/theme.service';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet],
+  standalone: true,
+  imports: [RouterOutlet, Navbar, Sidebar, NgxSonnerToaster],
   templateUrl: './app.html',
-  styleUrl: './app.scss'
+  styleUrls: ['./app.scss'],
+  animations: [routeAnimations]
 })
 export class App {
-  protected readonly title = signal('first_angular_project');
+  title = signal('Allocine');
+  sidebarOpen = signal(false);
+
+  private readonly themeService = inject(ThemeService);
+
+  constructor(private contexts: ChildrenOutletContexts) {}
+
+  getRouteAnimationData() {
+    return this.contexts.getContext('primary')?.route?.snapshot?.url;
+  }
+
+  toggleSidebar() {
+    this.sidebarOpen.update(open => !open);
+  }
+
+  closeSidebar() {
+    this.sidebarOpen.set(false);
+  }
 }

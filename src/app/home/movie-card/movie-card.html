@@ -1,0 +1,32 @@
+<a class="movie-card" [routerLink]="['/movie', movie.id]">
+  <div class="poster">
+    @if(movie.image) {
+      @if(movie.image.startsWith('http')) {
+        <img [src]="movie.image" [alt]="movie.title">
+      } @else {
+        <img [src]="'http://localhost:8080/movies/' + movie.id + '/image'" [alt]="movie.title">
+      }
+    } @else {
+      <div class="poster-placeholder">
+        <span>{{ movie.title.charAt(0) }}</span>
+      </div>
+    }
+  </div>
+  
+  <div class="content">
+    <h3 class="title">{{ movie.title }}</h3>
+    
+    <div class="meta">
+      <span *ngIf="movie.director">{{ movie.director }}</span>
+      <span class="separator" *ngIf="movie.director && movie.releaseDate">·</span>
+      <span *ngIf="movie.releaseDate">{{ movie.releaseDate | date:'yyyy' }}</span>
+    </div>
+    
+    <p class="synopsis" *ngIf="movie.synopsis">{{ movie.synopsis }}</p>
+    
+    <div class="rating" *ngIf="movie.rate">
+      <span class="star">★</span>
+      <span class="value">{{ movie.rate }}</span>
+    </div>
+  </div>
+</a>

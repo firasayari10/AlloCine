@@ -1,0 +1,167 @@
+<section class="profile-page fade-in">
+  <div class="profile-container">
+    <aside class="profile-sidebar">
+      <div class="user-card">
+        <div class="avatar">
+          {{ getInitials() }}
+        </div>
+        <h2 class="user-name">{{ user?.firstName }} {{ user?.lastName }}</h2>
+        <p class="user-email">{{ user?.email }}</p>
+        <p class="member-since">Member since {{ getMemberSince() }}</p>
+      </div>
+
+      <nav class="profile-nav">
+        <button 
+          class="nav-item" 
+          [class.active]="activeTab() === 'profile'"
+          (click)="activeTab.set('profile')">
+          <i class="bi bi-person"></i>
+          Profile
+        </button>
+        <button 
+          class="nav-item" 
+          [class.active]="activeTab() === 'settings'"
+          (click)="activeTab.set('settings')">
+          <i class="bi bi-gear"></i>
+          Settings
+        </button>
+      </nav>
+    </aside>
+
+    <main class="profile-content">
+      @if (activeTab() === 'profile') {
+        <div class="content-section">
+          <header class="section-header">
+            <h1>Profile Information</h1>
+            @if (!isEditing()) {
+              <button class="btn-secondary" (click)="startEditing()">Edit Profile</button>
+            }
+          </header>
+
+          @if (!isEditing()) {
+            <div class="info-grid">
+              <div class="info-item">
+                <label>First Name</label>
+                <p>{{ user?.firstName || '—' }}</p>
+              </div>
+              <div class="info-item">
+                <label>Last Name</label>
+                <p>{{ user?.lastName || '—' }}</p>
+              </div>
+              <div class="info-item">
+                <label>Email</label>
+                <p>{{ user?.email }}</p>
+              </div>
+              <div class="info-item">
+                <label>User ID</label>
+                <p>#{{ user?.id }}</p>
+              </div>
+            </div>
+          } @else {
+            <form class="edit-form" (ngSubmit)="saveProfile()">
+              <div class="form-row">
+                <div class="form-group">
+                  <label for="firstName">First Name *</label>
+                  <input 
+                    type="text" 
+                    id="firstName" 
+                    [(ngModel)]="editForm.firstName"
+                    name="firstName"
+                    placeholder="Enter first name"
+                    required>
+                </div>
+                <div class="form-group">
+                  <label for="lastName">Last Name</label>
+                  <input 
+                    type="text" 
+                    id="lastName" 
+                    [(ngModel)]="editForm.lastName"
+                    name="lastName"
+                    placeholder="Enter last name">
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label for="email">Email *</label>
+                <input 
+                  type="email" 
+                  id="email" 
+                  [(ngModel)]="editForm.email"
+                  name="email"
+                  placeholder="Enter email"
+                  required>
+              </div>
+
+              <div class="form-actions">
+                <button type="button" class="btn-secondary" (click)="cancelEditing()">Cancel</button>
+                <button type="submit" class="btn-primary" [disabled]="isLoading()">
+                  {{ isLoading() ? 'Saving...' : 'Save Changes' }}
+                </button>
+              </div>
+            </form>
+          }
+        </div>
+      }
+
+      @if (activeTab() === 'settings') {
+        <div class="content-section">
+          <header class="section-header">
+            <h1>Settings</h1>
+          </header>
+
+          <div class="settings-list">
+            <div class="setting-item">
+              <div class="setting-info">
+                <h3>Dark Mode</h3>
+                <p>Use dark theme across the application</p>
+              </div>
+              <button 
+                class="toggle" 
+                [class.active]="themeService.isDarkMode()"
+                (click)="toggleDarkMode()">
+                <span class="toggle-slider"></span>
+              </button>
+            </div>
+
+            <div class="setting-item">
+              <div class="setting-info">
+                <h3>Notifications</h3>
+                <p>Receive notifications about your collection</p>
+              </div>
+              <button 
+                class="toggle" 
+                [class.active]="settings.notifications"
+                (click)="toggleSetting('notifications')">
+                <span class="toggle-slider"></span>
+              </button>
+            </div>
+
+            <div class="setting-item">
+              <div class="setting-info">
+                <h3>Auto-play Trailers</h3>
+                <p>Automatically play movie trailers</p>
+              </div>
+              <button 
+                class="toggle" 
+                [class.active]="settings.autoPlay"
+                (click)="toggleSetting('autoPlay')">
+                <span class="toggle-slider"></span>
+              </button>
+            </div>
+          </div>
+
+          <div class="danger-zone">
+            <h2>Danger Zone</h2>
+            <div class="danger-item">
+              <div class="danger-info">
+                <h3>Delete Account</h3>
+                <p>Permanently delete your account and all data</p>
+              </div>
+              <button class="btn-danger">Delete Account</button>
+            </div>
+          </div>
+        </div>
+      }
+    </main>
+  </div>
+</section>

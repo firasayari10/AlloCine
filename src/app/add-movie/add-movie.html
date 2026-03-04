@@ -1,0 +1,94 @@
+<section class="add-page fade-in">
+  <a class="back-btn" routerLink="/">
+    <span class="arrow">←</span>
+    <span>Back</span>
+  </a>
+
+  <div class="page-container">
+    <header class="page-header">
+      <h1>Add Movie</h1>
+      <p class="subtitle">Add a new film to your collection</p>
+    </header>
+
+    <form class="form-container" (ngSubmit)="addMovie()">
+      <div class="form-group">
+        <label for="title">Title</label>
+        <input 
+          type="text" 
+          id="title" 
+          name="title" 
+          [(ngModel)]="movie.title"
+          placeholder="Enter movie title"
+          required>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="director">Director</label>
+          <input 
+            type="text" 
+            id="director" 
+            name="director" 
+            [(ngModel)]="movie.director"
+            placeholder="Enter director name">
+        </div>
+
+        <div class="form-group">
+          <label for="releaseDate">Release Date</label>
+          <input 
+            type="date" 
+            id="releaseDate" 
+            name="releaseDate" 
+            [(ngModel)]="movie.releaseDate">
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="synopsis">Synopsis</label>
+        <textarea 
+          id="synopsis" 
+          name="synopsis" 
+          [(ngModel)]="movie.synopsis"
+          placeholder="Enter movie synopsis"
+          rows="5"></textarea>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="rate">Rating</label>
+          <input 
+            type="number" 
+            id="rate" 
+            name="rate" 
+            [(ngModel)]="movie.rate"
+            min="0"
+            max="10"
+            step="0.1"
+            placeholder="0-10">
+        </div>
+
+        <div class="form-group">
+          <label for="image">Image URL</label>
+          <input 
+            type="text" 
+            id="image" 
+            name="image" 
+            [(ngModel)]="movie.image"
+            placeholder="Enter image URL">
+        </div>
+      </div>
+
+      <div class="form-actions">
+        <a class="btn-secondary" routerLink="/">
+          Cancel
+        </a>
+        <button type="submit" class="btn-primary">
+          Add Movie
+        </button>
+      </div>
+    </form>
+  </div>
+</section>
+
+
+

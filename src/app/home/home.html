@@ -1,0 +1,137 @@
+<section class="hero">
+  <div class="hero-content">
+    <h1 class="hero-title fade-in stagger-1">
+      Cinema Collection
+    </h1>
+    <p class="hero-subtitle fade-in stagger-2">
+      Discover and curate your personal film library.
+    </p>
+    <div class="hero-actions fade-in stagger-3">
+      <button class="btn-primary" (click)="scrollToMovies()">
+        Browse Collection
+      </button>
+      <button class="btn-secondary" (click)="scrollToExplore()">
+        Explore Movies
+      </button>
+    </div>
+  </div>
+</section>
+
+<section class="movies-section" id="movies-section">
+  <header class="section-header fade-in">
+    <h2 class="section-title">Your Movies</h2>
+    <p class="section-count">{{ (movies$ | async)?.length || 0 }} films</p>
+  </header>
+  
+  <div class="movies-grid">
+    <div *ngFor="let movie of movies$ | async; let i = index" 
+         class="movie-item fade-in"
+         [style.animation-delay.ms]="i * 50">
+      <app-movie-card [movie]="movie"></app-movie-card>
+    </div>
+  </div>
+
+  <div class="empty-state fade-in" *ngIf="(movies$ | async)?.length === 0">
+    <div class="empty-content">
+      <h3>No movies yet</h3>
+      <p>Start building your collection.</p>
+      <button class="btn-primary" (click)="scrollToExplore()">
+        Explore TMDB
+      </button>
+    </div>
+  </div>
+</section>
+
+<section class="explore-section" id="explore-section">
+  <header class="section-header fade-in">
+    <h2 class="section-title">Explore Movies</h2>
+    <p class="section-subtitle">Discover movies from The Movie Database</p>
+  </header>
+
+  <div class="explore-toolbar fade-in">
+    <div class="explore-search">
+      <span class="search-icon"></span>
+      <input 
+        type="text" 
+        placeholder="Search movies..."
+        [ngModel]="tmdbSearchQuery()"
+        (ngModelChange)="tmdbSearchQuery.set($event)"
+        (keyup.enter)="searchTmdbMovies()">
+      <button class="search-btn" (click)="searchTmdbMovies()">Search</button>
+    </div>
+
+    <div class="explore-categories">
+      <button 
+        class="category-btn" 
+        [class.active]="tmdbCategory() === 'popular'"
+        (click)="changeCategory('popular')">
+        Popular
+      </button>
+      <button 
+        class="category-btn" 
+        [class.active]="tmdbCategory() === 'top_rated'"
+        (click)="changeCategory('top_rated')">
+        Top Rated
+      </button>
+      <button 
+        class="category-btn" 
+        [class.active]="tmdbCategory() === 'now_playing'"
+        (click)="changeCategory('now_playing')">
+        Now Playing
+      </button>
+      <button 
+        class="category-btn" 
+        [class.active]="tmdbCategory() === 'upcoming'"
+        (click)="changeCategory('upcoming')">
+        Upcoming
+      </button>
+    </div>
+  </div>
+
+  <div class="loading-state" *ngIf="tmdbLoading()">
+    <div class="spinner"></div>
+    <p>Loading movies...</p>
+  </div>
+
+  <div class="tmdb-grid" *ngIf="!tmdbLoading()">
+    <div *ngFor="let movie of tmdbMovies(); let i = index" 
+         class="tmdb-card fade-in"
+         [style.animation-delay.ms]="i * 30">
+      <div class="tmdb-poster">
+        <img *ngIf="movie.poster_path" 
+             [src]="getPosterUrl(movie.poster_path)" 
+             [alt]="movie.title"
+             loading="lazy">
+        <div class="poster-placeholder" *ngIf="!movie.poster_path">
+          {{ movie.title.charAt(0) }}
+        </div>
+        
+        <div class="tmdb-rating">
+          <span class="star">★</span>
+          {{ movie.vote_average.toFixed(1) }}
+        </div>
+      </div>
+
+      <div class="tmdb-content">
+        <h3 class="tmdb-title">{{ movie.title }}</h3>
+        <p class="tmdb-date">{{ movie.release_date | date:'yyyy' }}</p>
+        <p class="tmdb-overview">{{ movie.overview }}</p>
+        
+        <button 
+          class="add-btn"
+          [class.added]="isMovieAdded(movie.id)"
+          [class.adding]="isAddingMovie(movie.id)"
+          [disabled]="isMovieAdded(movie.id) || isAddingMovie(movie.id)"
+          (click)="addToCollection(movie)">
+          <span *ngIf="isAddingMovie(movie.id)">Adding...</span>
+          <span *ngIf="isMovieAdded(movie.id)">✓ Added</span>
+          <span *ngIf="!isAddingMovie(movie.id) && !isMovieAdded(movie.id)">+ Add to Collection</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div class="no-results fade-in" *ngIf="!tmdbLoading() && tmdbMovies().length === 0">
+    <p>No movies found. Try a different search.</p>
+  </div>
+</section>
