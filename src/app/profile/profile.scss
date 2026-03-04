@@ -81,6 +81,7 @@
     font-size: 0.95rem;
     cursor: pointer;
     transition: all 0.2s ease;
+    text-decoration: none;
 
     i {
       font-size: 1.1rem;
@@ -94,6 +95,23 @@
     &.active {
       background: rgba(99, 102, 241, 0.15);
       color: var(--accent);
+    }
+
+    &.admin-link {
+      margin-top: 8px;
+      border-top: 1px solid var(--border-color);
+      padding-top: 20px;
+      color: #6366f1;
+      font-weight: 500;
+
+      i {
+        color: #6366f1;
+      }
+
+      &:hover {
+        background: rgba(99, 102, 241, 0.1);
+        color: #6366f1;
+      }
     }
   }
 }

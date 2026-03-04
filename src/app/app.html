@@ -2,8 +2,12 @@
 
 <ngx-sonner-toaster position="top-right" richColors />
 
-<app-navbar [title]="title()" (menuToggle)="toggleSidebar()"></app-navbar>
+<div class="app-wrapper">
+  <app-navbar [title]="title()" (menuToggle)="toggleSidebar()"></app-navbar>
 
-<main class="main-content" [@routeAnimations]="getRouteAnimationData()">
-  <router-outlet></router-outlet>
-</main>
+  <main class="main-content" [@routeAnimations]="getRouteAnimationData()">
+    <router-outlet></router-outlet>
+  </main>
+
+  <app-footer></app-footer>
+</div>

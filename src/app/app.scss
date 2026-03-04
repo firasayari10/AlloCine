@@ -4,7 +4,14 @@
   background: var(--bg-primary);
 }
 
+.app-wrapper {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
 .main-content {
   position: relative;
-  min-height: calc(100vh - 52px);
+  flex: 1;
+  min-height: calc(100vh - 52px - 120px); // navbar + footer
 }

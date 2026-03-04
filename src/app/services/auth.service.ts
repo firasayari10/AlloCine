@@ -1,6 +1,6 @@
 import { Injectable, inject, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable, tap, catchError, of, map } from 'rxjs';
+import { Observable, tap, catchError, of, map, switchMap } from 'rxjs';
 import { User, LoginRequest, RegisterRequest } from '../models/user';
 import { Router } from '@angular/router';
 
@@ -92,6 +92,19 @@ export class AuthService {
     return this.httpClient.get<User>(`${this.url}/byEmail/${email}`).pipe(
       map(() => true),
       catchError(() => of(false))
+    );
+  }
+
+  updateUserPassword(userId: number, newPassword: string): Observable<User> {
+    return this.getUserById(userId).pipe(
+      switchMap(user => {
+        const updatedUser = { ...user, password: newPassword };
+        return this.httpClient.put<User>(`${this.url}/${userId}`, updatedUser);
+      }),
+      catchError(err => {
+        console.error('Failed to update password:', err);
+        throw err;
+      })
     );
   }
 }
