@@ -1,4 +1,5 @@
-<section class="movie-detail" *ngIf="!loading && movie">
+@if (!loading && movie) {
+<section class="movie-detail">
   <button class="back-btn" (click)="goBack()">
     <span class="arrow">←</span>
     <span>{{ t.back }}</span>
@@ -7,15 +8,19 @@
   <div class="movie-container">
     <div class="poster-section">
       <div class="poster">
-        <img *ngIf="movie.image && movie.image.startsWith('http')" 
+        @if (movie.image && movie.image.startsWith('http')) {
+        <img 
              [src]="movie.image" 
              [alt]="movie.title">
-        <img *ngIf="movie.image && !movie.image.startsWith('http')" 
+        } @else if (movie.image) {
+        <img 
              [src]="'http://localhost:8080/movies/' + movie.id + '/image'" 
              [alt]="movie.title">
-        <div class="poster-placeholder" *ngIf="!movie.image">
+        } @else {
+        <div class="poster-placeholder">
           <span>{{ movie.title.charAt(0) }}</span>
         </div>
+        }
       </div>
     </div>
 
@@ -24,26 +29,36 @@
         <h1 class="movie-title">{{ movie.title }}</h1>
         
         <div class="movie-meta">
-          <span class="meta-item" *ngIf="movie.director">
+          @if (movie.director) {
+          <span class="meta-item">
             Directed by {{ movie.director }}
           </span>
-          <span class="separator" *ngIf="movie.director && movie.releaseDate">·</span>
-          <span class="meta-item" *ngIf="movie.releaseDate">
+          }
+          @if (movie.director && movie.releaseDate) {
+          <span class="separator">·</span>
+          }
+          @if (movie.releaseDate) {
+          <span class="meta-item">
             {{ movie.releaseDate | date:'MMMM d, yyyy' }}
           </span>
+          }
         </div>
 
-        <div class="rating" *ngIf="movie.rate">
+        @if (movie.rate) {
+        <div class="rating">
           <span class="star">★</span>
           <span class="value">{{ movie.rate }}</span>
           <span class="max">/ 10</span>
         </div>
+        }
       </header>
 
-      <div class="synopsis" *ngIf="movie.synopsis">
+      @if (movie.synopsis) {
+      <div class="synopsis">
         <h2>{{ t.synopsis }}</h2>
         <p>{{ movie.synopsis }}</p>
       </div>
+      }
 
       <div class="actions">
         <a class="btn-primary" [routerLink]="['/update-movie', movie.id]">
@@ -168,7 +183,10 @@
     </div>
   </div>
 </section>
+}
 
-<div class="loading" *ngIf="loading">
+@if (loading) {
+<div class="loading">
   <div class="spinner"></div>
 </div>
+}

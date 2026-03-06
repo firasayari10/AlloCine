@@ -29,9 +29,11 @@
             required>
         </div>
 
-        <div class="error-message" *ngIf="errorMessage">
+        @if (errorMessage) {
+        <div class="error-message">
           {{ errorMessage }}
         </div>
+        }
 
         <button type="submit" class="btn-primary" [disabled]="isLoading">
           {{ isLoading ? t.loading : t.signIn }}

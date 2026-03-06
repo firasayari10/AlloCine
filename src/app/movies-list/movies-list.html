@@ -54,29 +54,36 @@
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let movie of paginatedMovies()" [routerLink]="['/movie', movie.id]" class="clickable-row">
+        @for (movie of paginatedMovies(); track movie.id) {
+        <tr [routerLink]="['/movie', movie.id]" class="clickable-row">
           <td class="title-cell">
             <div class="movie-title-wrapper">
-              <div class="movie-poster-mini" *ngIf="movie.image && movie.image.startsWith('http')">
+              @if (movie.image && movie.image.startsWith('http')) {
+              <div class="movie-poster-mini">
                 <img [src]="movie.image" [alt]="movie.title">
               </div>
-              <div class="movie-poster-mini" *ngIf="movie.image && !movie.image.startsWith('http')">
+              } @else if (movie.image) {
+              <div class="movie-poster-mini">
                 <img [src]="'http://localhost:8080/movies/' + movie.id + '/image'" [alt]="movie.title">
               </div>
-              <div class="movie-poster-mini placeholder" *ngIf="!movie.image">
+              } @else {
+              <div class="movie-poster-mini placeholder">
                 {{ movie.title.charAt(0) }}
               </div>
+              }
               <span class="movie-title">{{ movie.title }}</span>
             </div>
           </td>
           <td>{{ movie.director || '—' }}</td>
           <td>{{ formatDate(movie.releaseDate) }}</td>
           <td>
-            <span class="rating-badge" *ngIf="movie.rate">
+            @if (movie.rate) {
+            <span class="rating-badge">
               <span class="star">★</span> {{ movie.rate }}
             </span>
-            <span class="no-rating" *ngIf="!movie.rate">—</span>
-          </td>
+            } @else {
+            <span class="no-rating">—</span>
+            }
           <td class="synopsis-cell">
             <span class="synopsis-text">{{ movie.synopsis || '—' }}</span>
           </td>
@@ -89,17 +96,24 @@
             </button>
           </td>
         </tr>
+        }
       </tbody>
     </table>
 
-    <div class="empty-state" *ngIf="filteredMovies().length === 0">
-      <p *ngIf="searchQuery()">{{ t.noMoviesFound }}</p>
-      <p *ngIf="!searchQuery()">{{ t.noMoviesYet }}</p>
+    @if (filteredMovies().length === 0) {
+    <div class="empty-state">
+      @if (searchQuery()) {
+      <p>{{ t.noMoviesFound }}</p>
+      } @else {
+      <p>{{ t.noMoviesYet }}</p>
+      }
       <a class="btn-primary" routerLink="/add-movie">{{ t.addMovie }}</a>
     </div>
+    }
   </div>
 
-  <div class="pagination" *ngIf="totalPages() > 1">
+  @if (totalPages() > 1) {
+  <div class="pagination">
     <button 
       class="page-btn" 
       [disabled]="currentPage() === 1"
@@ -108,13 +122,14 @@
     </button>
     
     <div class="page-numbers">
+      @for (page of pageNumbers(); track page) {
       <button 
-        *ngFor="let page of pageNumbers()"
         class="page-num"
         [class.active]="page === currentPage()"
         (click)="goToPage(page)">
         {{ page }}
       </button>
+      }
     </div>
     
     <button 
@@ -124,8 +139,11 @@
       Next →
     </button>
   </div>
+  }
 
-  <div class="page-info" *ngIf="filteredMovies().length > 0">
+  @if (filteredMovies().length > 0) {
+  <div class="page-info">
     Showing {{ (currentPage() - 1) * itemsPerPage() + 1 }} - {{ getEndIndex() }} of {{ filteredMovies().length }} movies
   </div>
+  }
 </section>

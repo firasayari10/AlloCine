@@ -66,14 +66,17 @@
   </header>
   
   <div class="movies-grid">
-    <div *ngFor="let movie of movies$ | async; let i = index" 
+    @for (movie of movies$ | async; track movie.id; let i = $index) {
+    <div 
          class="movie-item fade-in"
          [style.animation-delay.ms]="i * 50">
       <app-movie-card [movie]="movie"></app-movie-card>
     </div>
+    }
   </div>
 
-  <div class="empty-state fade-in" *ngIf="(movies$ | async)?.length === 0">
+  @if ((movies$ | async)?.length === 0) {
+  <div class="empty-state fade-in">
     <div class="empty-content">
       <h3>{{ t.noMoviesYet }}</h3>
       <p>{{ t.startBuilding }}</p>
@@ -82,6 +85,7 @@
       </button>
     </div>
   </div>
+  }
 </section>
 
 <section class="explore-section" id="explore-section">
@@ -130,23 +134,30 @@
     </div>
   </div>
 
-  <div class="loading-state" *ngIf="tmdbLoading()">
+  @if (tmdbLoading()) {
+  <div class="loading-state">
     <div class="spinner"></div>
     <p>{{ t.loading }}</p>
   </div>
+  }
 
-  <div class="tmdb-grid" *ngIf="!tmdbLoading()">
-    <div *ngFor="let movie of tmdbMovies(); let i = index" 
+  @if (!tmdbLoading()) {
+  <div class="tmdb-grid">
+    @for (movie of tmdbMovies(); track movie.id; let i = $index) {
+    <div 
          class="tmdb-card fade-in"
          [style.animation-delay.ms]="i * 30">
       <div class="tmdb-poster">
-        <img *ngIf="movie.poster_path" 
+        @if (movie.poster_path) {
+        <img 
              [src]="getPosterUrl(movie.poster_path)" 
              [alt]="movie.title"
              loading="lazy">
-        <div class="poster-placeholder" *ngIf="!movie.poster_path">
+        } @else {
+        <div class="poster-placeholder">
           {{ movie.title.charAt(0) }}
         </div>
+        }
         
         <div class="tmdb-rating">
           <span class="star">★</span>
@@ -165,15 +176,23 @@
           [class.adding]="isAddingMovie(movie.id)"
           [disabled]="isMovieAdded(movie.id) || isAddingMovie(movie.id)"
           (click)="addToCollection(movie)">
-          <span *ngIf="isAddingMovie(movie.id)">{{ t.loading }}</span>
-          <span *ngIf="isMovieAdded(movie.id)">✓</span>
-          <span *ngIf="!isAddingMovie(movie.id) && !isMovieAdded(movie.id)">+ {{ t.addToCollection }}</span>
+          @if (isAddingMovie(movie.id)) {
+          <span>{{ t.loading }}</span>
+          } @else if (isMovieAdded(movie.id)) {
+          <span>✓</span>
+          } @else {
+          <span>+ {{ t.addToCollection }}</span>
+          }
         </button>
       </div>
     </div>
+    }
   </div>
+  }
 
-  <div class="no-results fade-in" *ngIf="!tmdbLoading() && tmdbMovies().length === 0">
+  @if (!tmdbLoading() && tmdbMovies().length === 0) {
+  <div class="no-results fade-in">
     <p>{{ t.noMoviesFound }}</p>
   </div>
+  }
 </section>

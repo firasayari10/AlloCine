@@ -17,16 +17,26 @@
     <h3 class="title">{{ movie.title }}</h3>
     
     <div class="meta">
-      <span *ngIf="movie.director">{{ movie.director }}</span>
-      <span class="separator" *ngIf="movie.director && movie.releaseDate">·</span>
-      <span *ngIf="movie.releaseDate">{{ movie.releaseDate | date:'yyyy' }}</span>
+      @if (movie.director) {
+      <span>{{ movie.director }}</span>
+      }
+      @if (movie.director && movie.releaseDate) {
+      <span class="separator">·</span>
+      }
+      @if (movie.releaseDate) {
+      <span>{{ movie.releaseDate | date:'yyyy' }}</span>
+      }
     </div>
     
-    <p class="synopsis" *ngIf="movie.synopsis">{{ movie.synopsis }}</p>
+    @if (movie.synopsis) {
+    <p class="synopsis">{{ movie.synopsis }}</p>
+    }
     
-    <div class="rating" *ngIf="movie.rate">
+    @if (movie.rate) {
+    <div class="rating">
       <span class="star">★</span>
       <span class="value">{{ movie.rate }}</span>
     </div>
+    }
   </div>
 </a>
